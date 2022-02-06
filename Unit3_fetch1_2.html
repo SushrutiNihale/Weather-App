@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        input {
+            margin: 1em 0 1em 1em;
+        }
+        #success {
+            display: none;
+        }
+        #success > div {
+            padding: 1em;
+            display: flex;
+            flex-direction: column;
+        }
+        p {
+            margin: 0;
+            padding: 0.2em 0;
+            font-size: 0.8rem;
+            color: dimgray;
+            letter-spacing: 0.015em;
+        }
+        h2 {
+            letter-spacing: 0.015em;
+        }
+        #error {
+            display: none;
+            padding: 1em;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="movieName" placeholder="Enter movie name">
+    <input type="submit" id="submit" value="SUBMIT" onclick="getUserMovie()">
+    <div id="error">
+        <img src="https://i.makeagif.com/media/11-04-2015/mfnzwt.gif">
+        <p>Oops, please try again!</p>
+    </div>
+    <div id="success">
+        <div>
+            <img src="" id="image">
+        </div>
+        <div>
+            
+            <h2 id="title"></h2>
+            <p id="rating"></p>
+            <p id="year"></p>
+            
+        </div>
+    </div>
+    
+</body>
+</html>
+
+<script>
+    
+    async function getMovie(url) {
+        let res = await fetch(url);
+        let data = await res.json();
+        if (data.Response == "True") {
+            document.getElementById('error').style.display = 'none';
+            displayData(data);
+            document.getElementById('success').style.display = 'flex';
+        } else {
+            document.getElementById('success').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+        }
+        
+
+        
+    }
+    function displayData(data) {
+        document.getElementById('image').setAttribute('src',data['Poster']);
+        document.getElementById('title').textContent = data['Title'];
+        let rating = "IMDB rating: " + data['imdbRating'];
+        document.getElementById('rating').textContent = rating;
+        let year = "Released in: " + data['Year'];
+        document.getElementById('year').textContent = year;
+    }
+    function getUserMovie() {
+        document.getElementById('recommend').setAttribute('src','');
+        let url = 'http://www.omdbapi.com/?apikey=11ff0cf1&t='
+        let movie = document.getElementById('movieName').value;
+        url += movie;
+        getMovie(url);
+    }
+    
+</script>
